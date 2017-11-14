@@ -119,7 +119,7 @@ namespace AA_El_Poeta
 
             IEnumerable<string> ngram = Program.makeNgrams("Hola mi nombre es Daniel Alvarado. Hola, mi nombre es Roberto Rojas Segnini", 2);
             Dictionary<string, int> dictionary = createDictionary(ngram);
-            //1398444929
+         
             string outputGoal = String.Join(" ", ngramMeta);
             string output = String.Join(" ", ngram);
 
