@@ -96,19 +96,38 @@ namespace AA_El_Poeta
 
             return dictionary;
         }
-        static void Main(string[] args)
+        //public static void Manhattan(Dictionary<string, int> dictionaryGoal, Dictionary<string, int> dictionary)
+        public static void Manhattan(string goalPoem, string poem)
         {
-            IEnumerable<string> ngram = Program.makeNgrams("Hola mi nombre es Daniel Alvarado. Hola, mi nombre es Roberto Rojas Segnini", 2);
-            Dictionary<string, int> dictionary = createDictionary(ngram);
-            string output = String.Join(",", ngram);
-
+            var a = Math.Abs(poem.GetHashCode()) - Math.Abs(goalPoem.GetHashCode());
+            Console.WriteLine(a);
+            /*
             foreach (var item in dictionary)
             {
-                Console.WriteLine(item);
-            }
+                foreach (var item2 in dictionaryGoal)
+                {
+                    
+                   var a = Math.Abs(item.GetHashCode())- Math.Abs(item2.GetHashCode());
+                    Console.WriteLine(a);
+                }
+            }*/
+        }
+        static void Main(string[] args)
+        {
+            IEnumerable<string> ngramMeta = Program.makeNgrams("Hola nombre mi asfasfLJKASLFJKH es Daniel Alvarado. Hola, mi nombre es Roberto Rojas Segnini", 2);
+            Dictionary<string, int> dictionaryMeta = createDictionary(ngramMeta);
+
+            IEnumerable<string> ngram = Program.makeNgrams("Hola mi nombre es Daniel Alvarado. Hola, mi nombre es Roberto Rojas Segnini", 2);
+            Dictionary<string, int> dictionary = createDictionary(ngram);
+            //1398444929
+            string outputGoal = String.Join(" ", ngramMeta);
+            string output = String.Join(" ", ngram);
+
+            Manhattan(outputGoal, output);
+            
 
                 //Console.WriteLine(output);
-                Console.ReadLine();
+            Console.ReadLine();
         }
     }
 }
