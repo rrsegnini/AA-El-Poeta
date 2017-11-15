@@ -130,13 +130,25 @@ namespace AA_El_Poeta
             return dictionary;
         }*/
 
-        public static OrderedDictionary CreateOrderedDictionary(IEnumerable<string> ngram)
+        public static void DeepCopy(OrderedDictionary datos, OrderedDictionary dictionary)
+        {
+            foreach (DictionaryEntry item in datos)
+            {
+                dictionary.Add(item.Key, item.Value);
+                Console.WriteLine(item.Key + " " + item.Value);
+            }
+        }
+        public static OrderedDictionary CreateOrderedDictionary(OrderedDictionary datos, IEnumerable<string> ngram)
 
         {
             ngram.GetEnumerator();
+            OrderedDictionary dictionary = new OrderedDictionary();
+            DeepCopy(datos, dictionary);
 
-            OrderedDictionary dictionary =
-            new OrderedDictionary();
+            
+
+            /*OrderedDictionary dictionary =
+            new OrderedDictionary();*/
 
             int i = 1;
             
@@ -145,6 +157,7 @@ namespace AA_El_Poeta
                 //dictionary.Contains
                 if (dictionary.Contains(item))
                 {
+
                     i = (int)dictionary[item];
                     
                     i++;
@@ -153,7 +166,7 @@ namespace AA_El_Poeta
                 }
                 else
                 {
-                    dictionary.Add(item, 1);
+                    //dictionary.Add(item, 1);
                 }
                 //Console.WriteLine(item);  
             }
@@ -183,94 +196,91 @@ namespace AA_El_Poeta
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public static string GetPoem(string words)
+        public static string readFile(string _fileLocation)
         {
+            string text = System.IO.File.ReadAllText(@_fileLocation);
+            return text;
+         }
+
+
+
+
+
+
+        public static int CalculateManhattanDistance(int x1, int y1)
+        {
+            return Math.Abs(x1) + Math.Abs(y1);
+        }
+
+        public static int CalculateChebyshevDistance(int x1, int y1)
+        {
+            return Math.Max(Math.Abs(x1), Math.Abs(y1));
+        }
+
+        public static int CalculateOwnDistance(string _text1, string _text2)
+        {
+            int i, count = 0;
+            for (i = 0; i < _text1.Length; i++)
+            {
+                if (_text1[i] != _text2[i])
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+
+
+
+
+
+
+
+
+
+        public static OrderedDictionary GetPoem(OrderedDictionary datos, int size)
+        {
+            string output = "";
+            
             Random rand = new Random();
             int number = rand.Next(1, 43);
 
-            IEnumerable<string> ngram =
-                Program.makeNgrams
-                (words, 2);
-
-            IEnumerable<string> ngram2 =
-                Program.makeNgrams
-                (words, 3);
-
-            IEnumerable<string> ngram3 = ngram.Concat(ngram2);
 
             var r = new Random();
-            //ngram3 = ngram3.OrderBy(i => r.Next());
+        
 
-            // ngram3.ToList().
-
-            ngram3 = ngram3.OrderBy(a => Guid.NewGuid()).ToList();
-
-            OrderedDictionary dictionary = CreateOrderedDictionary(ngram3);
-            //Dictionary<string, int> dictionary = createDictionary(ngram3);
-            //string output = String.Join(" ", dictionary);
 
             StringBuilder newDocument = new StringBuilder();
+            OrderedDictionary resultado = new OrderedDictionary();
 
-            //IEnumerable<string> newDocument = null;}
-
-
-
-            /*foreach (var item in dictionary)
-            {
-                int YesNo = rand.Next(0, 3);
-                //Console.WriteLine(YesNo);
-                if (YesNo == 1)
-                {
-                    newDocument.Append(item.Key);
-                    newDocument.Append(" ");
-                    //Console.WriteLine(item);
-                }
-            }*/
             int num = 0;
-            foreach (DictionaryEntry item in dictionary)
+            foreach (DictionaryEntry item in datos)
             {
                 int YesNo = rand.Next(0, 5);
                 //Console.WriteLine(YesNo);
                 if (YesNo == 1)
                 {
-                    newDocument.Append(item.Key);
-                    newDocument.Append(" ");
+                    resultado.Add(item.Key, 1);
+
                     num++;
-                    if (num == 5)
+                    if (num == size)
                     {
                         break;
                     }
                     //Console.WriteLine(item);
                 }
+                else
+                {
+                    resultado.Add(item.Key, 0);
+                }
             }
 
 
 
-
-            string output = String.Join(" ", newDocument.ToString());
-            return output;
+            //string output = String.Join(" ", newDocument.ToString());
+            
+            return resultado;
             //yield return newDocument.ToString();
         }
 
@@ -285,10 +295,11 @@ namespace AA_El_Poeta
 
             foreach (var item in ngram)
             {
- 
+                if (!dictionary.Contains(item))
+                { 
                     dictionary.Add(item, 0);
-                
-                Console.WriteLine(dictionary[item]);  
+                }
+                  
             }
 
             return dictionary;
@@ -296,30 +307,32 @@ namespace AA_El_Poeta
         }
 
 
-        public static string Genetic(string words)
+        public static OrderedDictionary Genetic(OrderedDictionary datos, OrderedDictionary poemaMeta, OrderedDictionary poema)
         {
-            IEnumerable<string> ngramMeta = Program.makeNgrams("Puedo escribir los versos tristes esta noche", 2);
-            OrderedDictionary dictionaryMeta = CreateOrderedDictionary(ngramMeta);
+            //string poema = null;
+            //IEnumerable<string> ngramMeta = Program.makeNgrams("Puedo escribir los versos tristes esta noche", 2);
+            //OrderedDictionary dictionaryMeta = CreateOrderedDictionary(ngramMeta, ngramMeta);
             //Dictionary<string, int> dictionaryMeta = createDictionary(ngramMeta);
 
-            OrderedDictionary dictionaryMetaZeros = CreateDictionaryZero(ngramMeta);
+            //OrderedDictionary dictionaryMetaZeros = CreateDictionaryZero(ngramMeta);
 
 
-            string outputGoal = String.Join(" ", ngramMeta);
+            //string outputGoal = String.Join(" ", ngramMeta);
             //string output = String.Join(" ", ngram);
 
 
 
             OrderedDictionary ordered = new OrderedDictionary();
 
-            string poema = null;
+            
             int distance = 0;
             for (int i = 0; i < 1000; i++)
             {
-                poema = GetPoem(words);
+                poema = GetPoem(datos, 5);
 
-                distance = Manhattan(outputGoal, poema);
-                /*if (distance >= 0 && distance < 100)
+                distance = CompareDictionaries(poemaMeta, poema);
+
+                /*if (distance >= 0 && distance < 1)
                 {
                     //break;
                     return poema;
@@ -333,9 +346,9 @@ namespace AA_El_Poeta
                     ordered.Add(distance, poema);
 
                 }
-                //Console.WriteLine(poema);
+               
             }
-            //ordered.Remove(ordered[0]);
+            
 
             var normalOrderedDictionary = ordered.Cast<DictionaryEntry>()
                        .OrderBy(r => r.Key)
@@ -348,9 +361,9 @@ namespace AA_El_Poeta
                 Console.WriteLine(item.Key + " " + item.Value);
             }
 
-
-            return poema;
-            //return Genetic(DictionaryToString(orderedFinal));
+    
+            //return poema;
+            return Genetic(datos, poemaMeta, poema);
 
         }
 
@@ -366,12 +379,70 @@ namespace AA_El_Poeta
 
             return result;
         }
+
+
+
+        public static int CompareDictionaries(OrderedDictionary dict1, OrderedDictionary dict2)
+        {
+            int distance = 0;
+            for (int i = 0; i < dict1.Count; i++)
+            {
+                distance += CalculateManhattanDistance((int)dict2[i], (int)dict1[i]);
+                distance += CalculateChebyshevDistance((int)dict2[i], (int)dict1[i]);
+                
+                Console.WriteLine(dict1[i] + "-" + dict2[i]);
+
+            //Console.WriteLine(dict2[i]);
+            }
+
+            return distance;
+        }
+    
+        
+
+
         static void Main(string[] args)
         {
+            //string datos = readFile("C:/Users/CASA/source/repos/AA-El Poeta/all.txt");
+            string datos = "Hola, soy Roberto Rojas Segnini. Me gustan los conejos";
+            IEnumerable<string> ngramDatos2 = Program.makeNgrams(datos, 2);
+            string outputDatos = String.Join("|||", ngramDatos2);
+            Console.WriteLine(outputDatos);
+
+            OrderedDictionary dictDatos2 = CreateDictionaryZero(ngramDatos2);
 
 
-           
-            Console.WriteLine(Genetic(poema20));
+            string meta = "I love you";
+            IEnumerable<string> ngramMeta = Program.makeNgrams(meta, 2);
+            string outputMeta = String.Join("|||", ngramMeta);
+            Console.WriteLine(outputMeta);
+            OrderedDictionary dictMeta = CreateOrderedDictionary(dictDatos2, ngramMeta);
+
+
+
+            string poema = "Hola, me gustan los conejos. Soy Roberto Rojas Segnini";
+            IEnumerable<string> ngramPoema2 = Program.makeNgrams(poema, 2);
+            string output = String.Join("|||", ngramPoema2);
+
+            OrderedDictionary dict = CreateOrderedDictionary(dictDatos2, ngramPoema2);
+
+            foreach (DictionaryEntry item in dict)
+            {
+               // Console.WriteLine(item.Key + "  " + item.Value);
+            }
+
+
+            Console.WriteLine(CompareDictionaries(dictMeta, dict));
+            //Console.WriteLine(output);
+
+
+
+
+            foreach (DictionaryEntry item in Genetic(dictDatos2, dictMeta, new OrderedDictionary()))
+            {
+                Console.WriteLine(item.Key);
+            }
+            //Console.WriteLine(Genetic(poema20));
             Console.ReadLine();
         }
     }
