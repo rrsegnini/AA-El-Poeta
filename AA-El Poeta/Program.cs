@@ -112,6 +112,12 @@ namespace AA_El_Poeta
                 }
             }*/
         }
+
+        public static string readFile(string _fileLocation) {
+            string text = System.IO.File.ReadAllText(@_fileLocation);
+            return text;
+        }
+
         static void Main(string[] args)
         {
             IEnumerable<string> ngramMeta = Program.makeNgrams("Hola nombre mi asfasfLJKASLFJKH es Daniel Alvarado. Hola, mi nombre es Roberto Rojas Segnini", 2);
