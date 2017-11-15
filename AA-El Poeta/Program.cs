@@ -37,7 +37,7 @@ namespace AA_El_Poeta
                 "Es tan corto el amor, y es tan largo el olvido.Porque en noches como ésta la tuve entre mis brazos," +
                 "Mi alma no se contenta con haberla perdido.Aunque éste sea el último dolor que ella me causa," +
                 "y éstos sean los últimos versos que yo le escribo";
-
+        
         
 
         public static IEnumerable<string> makeNgrams(string text, int nGramSize)
@@ -179,6 +179,32 @@ namespace AA_El_Poeta
             }*/
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public static string GetPoem(string words)
         {
             Random rand = new Random();
@@ -293,11 +319,11 @@ namespace AA_El_Poeta
                 poema = GetPoem(words);
 
                 distance = Manhattan(outputGoal, poema);
-                if (distance >= 0 && distance < 100)
+                /*if (distance >= 0 && distance < 100)
                 {
                     //break;
                     return poema;
-                }
+                }*/
                 if (!ordered.Contains(distance) && distance >= 0)
                 {
                     /*if (distance < 1000)
@@ -323,8 +349,8 @@ namespace AA_El_Poeta
             }
 
 
-            //return poema;
-            return Genetic(DictionaryToString(orderedFinal));
+            return poema;
+            //return Genetic(DictionaryToString(orderedFinal));
 
         }
 
@@ -344,8 +370,7 @@ namespace AA_El_Poeta
         {
 
 
-
-
+           
             Console.WriteLine(Genetic(poema20));
             Console.ReadLine();
         }
