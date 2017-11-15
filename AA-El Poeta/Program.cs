@@ -10,6 +10,8 @@ namespace AA_El_Poeta
 {
     class Program
     {
+        static int Generations = 0;
+
         static string poema20 = "Puedo escribir los versos más tristes esta noche.Escribir, por ejemplo: «La noche está estrellada," +
                 "y tiritan, azules, los astros, a lo lejos.» " +
                 "El viento de la noche gira en el cielo y canta." +
@@ -332,11 +334,11 @@ namespace AA_El_Poeta
 
                 distance = CompareDictionaries(poemaMeta, poema);
 
-                /*if (distance >= 0 && distance < 1)
+                if (distance >= 0 && distance < 1)
                 {
-                    //break;
+                    Console.WriteLine("La distancia: " + distance);
                     return poema;
-                }*/
+                }
                 if (!ordered.Contains(distance) && distance >= 0)
                 {
                     /*if (distance < 1000)
@@ -361,12 +363,97 @@ namespace AA_El_Poeta
                 Console.WriteLine(item.Key + " " + item.Value);
             }
 
-    
+            foreach (DictionaryEntry item in orderedFinal)
+            {
+                
+                Console.WriteLine(item.Key + " " + item.Value);
+            }
+
+
             //return poema;
-            return Genetic(datos, poemaMeta, poema);
+            return Genetic(datos, poemaMeta, orderedFinal);
+            //return Genetic(datos, poemaMeta, poema);
 
         }
 
+
+
+
+        public static OrderedDictionary CreateGeneration(OrderedDictionary datos, OrderedDictionary poemaMeta)
+        {
+            OrderedDictionary generation = new OrderedDictionary();
+            OrderedDictionary individuo = new OrderedDictionary();
+            for (int i = 0; i < 100; i++)
+            {
+                individuo = GetPoem(datos, poemaMeta.Count);
+                PrintDictionary(individuo);
+                //individuo.
+                generation.Add(i, individuo);
+            }
+
+            Generations++;
+            Console.WriteLine("Generaciones: " + Generations);
+            return generation;
+        }
+
+        public static OrderedDictionary Genetic2(OrderedDictionary datos, OrderedDictionary poemaMeta, OrderedDictionary ElementosPrometedores)
+        {
+            OrderedDictionary generation = new OrderedDictionary();
+
+            if (ElementosPrometedores == null)
+            {
+                 generation = CreateGeneration(datos, poemaMeta);
+            }
+            else
+            {
+                //generation = new OrderedDictionary();
+                    DeepCopy(ElementosPrometedores, generation);
+            }
+
+
+
+            int distance = 0;
+            OrderedDictionary ordered = new OrderedDictionary();
+            for (int i = 0; i<generation.Count; i++)
+            
+            {
+     
+                distance = CompareDictionaries(poemaMeta, (OrderedDictionary)generation[i]);
+                Console.WriteLine(distance);
+
+                if (!ordered.Contains(distance))
+                {
+                    ordered.Add(distance, (OrderedDictionary)generation[i]);
+                }
+
+            }
+
+            var normalOrderedDictionary = ordered.Cast<DictionaryEntry>()
+                      .OrderBy(r => r.Key)
+                      .ToDictionary(c => c.Key, d => d.Value);
+
+            OrderedDictionary orderedFinal = new OrderedDictionary();
+            foreach (var item in normalOrderedDictionary)
+            {
+                orderedFinal.Add(item.Key, item.Value);
+                Console.WriteLine(item.Key + " " + item.Value);
+                PrintDictionary((OrderedDictionary)item.Value);
+            }
+
+               PrintDictionary (Crossover(orderedFinal));
+            return Crossover(orderedFinal);
+
+        }
+
+
+
+        public static void PrintDictionary(OrderedDictionary dict)
+        {
+            foreach (DictionaryEntry item in dict)
+            {
+                Console.WriteLine(item.Key + "  " + item.Value);
+            }
+        }
         public static string DictionaryToString(OrderedDictionary NewWords)
         {
             string result = null;
@@ -381,6 +468,50 @@ namespace AA_El_Poeta
         }
 
 
+        public static OrderedDictionary SumDictionaries(OrderedDictionary dict1, OrderedDictionary dict2)
+        {
+            OrderedDictionary resultado = new OrderedDictionary();
+            foreach (DictionaryEntry item in dict1)
+            {
+                resultado.Add(item.Key, item.Value);
+            }
+            int save = 0;
+            foreach (DictionaryEntry item in dict2)
+            {
+                if ((int)item.Value != 0)
+                {
+                    save = (int)resultado[item.Key];
+                    save += (int)item.Value;
+                    resultado[item.Key] = save;
+                }
+            }
+
+            return resultado;
+        }
+
+        public static OrderedDictionary Crossover(OrderedDictionary population)
+        {
+            bool first = true;
+            int cont = 0;
+            OrderedDictionary prev = new OrderedDictionary();
+            OrderedDictionary NewElements = new OrderedDictionary();
+            foreach (DictionaryEntry item in population)
+            {
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    NewElements.Add(cont, SumDictionaries(prev, (OrderedDictionary)item.Value));
+                    cont++;
+                }
+                prev = (OrderedDictionary)item.Value;
+            }
+
+            return NewElements;
+        }
+
 
         public static int CompareDictionaries(OrderedDictionary dict1, OrderedDictionary dict2)
         {
@@ -390,7 +521,7 @@ namespace AA_El_Poeta
                 distance += CalculateManhattanDistance((int)dict2[i], (int)dict1[i]);
                 distance += CalculateChebyshevDistance((int)dict2[i], (int)dict1[i]);
                 
-                Console.WriteLine(dict1[i] + "-" + dict2[i]);
+                //Console.WriteLine(dict1[i] + "-" + dict2[i]);
 
             //Console.WriteLine(dict2[i]);
             }
@@ -404,7 +535,7 @@ namespace AA_El_Poeta
         static void Main(string[] args)
         {
             //string datos = readFile("C:/Users/CASA/source/repos/AA-El Poeta/all.txt");
-            string datos = "Hola, soy Roberto Rojas Segnini. Me gustan los conejos";
+            string datos = "Hola, soy Roberto Rojas Segnini. Me gustan los conejos soy Carlos amo los perros";
             IEnumerable<string> ngramDatos2 = Program.makeNgrams(datos, 2);
             string outputDatos = String.Join("|||", ngramDatos2);
             Console.WriteLine(outputDatos);
@@ -412,7 +543,7 @@ namespace AA_El_Poeta
             OrderedDictionary dictDatos2 = CreateDictionaryZero(ngramDatos2);
 
 
-            string meta = "I love you";
+            string meta = "Hola soy Roberto";
             IEnumerable<string> ngramMeta = Program.makeNgrams(meta, 2);
             string outputMeta = String.Join("|||", ngramMeta);
             Console.WriteLine(outputMeta);
@@ -432,16 +563,17 @@ namespace AA_El_Poeta
             }
 
 
-            Console.WriteLine(CompareDictionaries(dictMeta, dict));
+            //Console.WriteLine(CompareDictionaries(dictMeta, dict));
             //Console.WriteLine(output);
 
 
+            Genetic2(dictDatos2, dictMeta, Genetic2(dictDatos2, dictMeta, Genetic2(dictDatos2, dictMeta, Genetic2(dictDatos2, dictMeta, null))));
 
 
-            foreach (DictionaryEntry item in Genetic(dictDatos2, dictMeta, new OrderedDictionary()))
+            /*foreach (DictionaryEntry item in Genetic(dictDatos2, dictMeta, new OrderedDictionary()))
             {
                 Console.WriteLine(item.Key);
-            }
+            }*/
             //Console.WriteLine(Genetic(poema20));
             Console.ReadLine();
         }
