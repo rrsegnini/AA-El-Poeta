@@ -719,7 +719,7 @@ namespace AA_El_Poeta
         }
 
         static void Main(string[] args)
-        {
+        {/*
             //string datos = readFile("C:/Users/CASA/source/repos/AA-El Poeta/all.txt");
             string datos = "Hola, soy Roberto Rojas Segnini. Me gustan los conejos soy Carlos amo los perros";
             //IEnumerable<string> ngramDatos1 = Program.makeNgrams(datos, 1);
@@ -764,7 +764,30 @@ namespace AA_El_Poeta
                     a = NewGroup(dictDatos2, a, dictMeta);
                 }
                 datos2 = NewGroup(dictDatos2, a, dictMeta);
+            }*/
+
+            Poem newPoem = new Poem();
+            newPoem.Start();
+            for (int i = 0; i < 500; i++)
+            { newPoem.Update(); }
+            
+            
+       
+            //Console.WriteLine(newPoem.ga.BestGenes);
+
+            var sb = new StringBuilder();
+          
+            foreach (var item in newPoem.ga.BestGenes)
+            {
+                sb.Append(item);
+                sb.Append(" ");
+                
             }
+            Console.WriteLine(sb.ToString());
+
+
+
+            //Individual a = new Individual(10, )
 
             //PrintDictionary(a);
             //PrintDictionary(GetBestElement(a));
